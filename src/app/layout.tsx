@@ -3,6 +3,8 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ColorThemeProvider } from "@/providers/color-theme";
+import Theme from "@/components/global/theme";
 
 const inter = DM_Sans({ subsets: ["latin"] });
 
@@ -11,6 +13,7 @@ export const metadata: Metadata = {
   description: "TeamTalk | The ultimate chat app",
 };
 
+export const revalidate = 0;
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -19,15 +22,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
+        {/* <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
-        >
-          {children}
-          <Toaster/>
-        </ThemeProvider>
+        > */}
+          <ColorThemeProvider>
+            <Theme>{children}</Theme>
+            <Toaster />
+          </ColorThemeProvider>
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );

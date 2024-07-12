@@ -3,12 +3,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInFormSchema } from "@/schema/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Provider } from "@supabase/supabase-js";
 import { supabaseClient } from "@/lib/supabase/create-client";
 import { registerWithEmail } from "@/actions/register-with-email";
 import ToastNotify from "@/components/global/ToastNotify";
+import { useRouter } from "next/navigation";
 export const useAuth = () => {
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
@@ -18,6 +19,7 @@ export const useAuth = () => {
     },
   });
   const { handleSubmit } = form;
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const handleLoginWithEmail = handleSubmit(
     async (value: z.infer<typeof signInFormSchema>) => {
@@ -47,5 +49,18 @@ export const useAuth = () => {
     });
     setLoading(false);
   };
+
+  const getUser = async () => {
+    const {
+      data: { session },
+    } = await supabaseClient.auth.getSession();
+
+    if (session) {
+      router.push("/");
+    }
+  };
+  useEffect(() => {
+    getUser();
+  }, [router]);
   return { form, loading, handleLoginWithEmail, socialAuth };
 };

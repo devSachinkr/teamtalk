@@ -22,7 +22,7 @@ export const ColorThemeProvider: FC<ColorThemeProvider> = ({ children }) => {
     if (color) {
       return color as colors;
     } else {
-      return "slate";
+      return "primary";
     }
   });
   const [isMounted, setIsMounted] = useState(false);

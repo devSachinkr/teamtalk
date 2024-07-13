@@ -11,7 +11,8 @@ type Props = {
 const Theme: FC<Props> = ({ children }) => {
   const { theme } = useTheme();
   const { colorTheme } = useColorTheme();
-  let bg_color = "bg-background";
+  let bg_color = "bg-primary-dark";
+
   switch (colorTheme) {
     case "blue":
       bg_color = "bg-blue-500";
@@ -46,19 +47,22 @@ const Theme: FC<Props> = ({ children }) => {
     case "slate":
       bg_color = "bg-slate-500";
       break;
+    case "primary":
+      bg_color = "bg-primary-dark";
+      break;
     default:
       bg_color = "bg-background";
       break;
   }
   return (
-    <div className={cn("md:px-2 md:pb-2 md:h-screen md:pt-14")}>
+    <div className={cn("md:px-2 md:pb-2 md:h-screen md:pt-14", bg_color)}>
       <main
         className={cn(
           "md:ml-[280px] lg:ml-[420px] md:h-full overflow-scroll [&::-webkit-scrollbar-thumb]:rounded-[6px] [&::-webkit-scrollbar-thumb]:bg-foreground/60 [&::-webkit-scrollbar-track]:bg-none [&::-webkit-scrollbar]:w-2",
           theme === "dark" ? "bg-[#232529]" : "bg-white"
         )}
       >
-      {children}
+        {children}
       </main>
     </div>
   );

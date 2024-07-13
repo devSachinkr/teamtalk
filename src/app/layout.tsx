@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { ColorThemeProvider } from "@/providers/color-theme";
 import Theme from "@/components/global/theme";
+import { ModalProvider } from "@/providers/modal-provider";
 
 const inter = DM_Sans({ subsets: ["latin"] });
 
@@ -22,17 +23,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* <ThemeProvider
+        <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        > */}
+        >
           <ColorThemeProvider>
-            <Theme>{children}</Theme>
-            <Toaster />
+            <Theme>
+              <ModalProvider>
+                {children}
+                <Toaster />
+              </ModalProvider>
+            </Theme>
           </ColorThemeProvider>
-        {/* </ThemeProvider> */}
+        </ThemeProvider>
       </body>
     </html>
   );

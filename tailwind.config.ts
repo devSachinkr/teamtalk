@@ -27,7 +27,8 @@ module.exports = withUt({
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          dark: "#451c49",
+          dark: "#320B36",
+          light:"#1D0F20"
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

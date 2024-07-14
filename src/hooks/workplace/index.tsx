@@ -15,6 +15,7 @@ import { z } from "zod";
 import { create } from "zustand";
 import { createWorkSpace } from "@/actions/create-work-space";
 import ToastNotify from "@/components/global/ToastNotify";
+import { useModal } from "@/providers/modal-provider";
 type CreateWorkSpaceValues = {
   name: string;
   imageUrl: string;
@@ -34,6 +35,8 @@ export const useWorkplaceStore = create<CreateWorkSpaceValues>((set) => ({
 
 export const useWorkplace = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const { isOpen, setClose } = useModal();
+
   const form = useForm<z.infer<typeof workspaceFormSchemaStep1>>({
     mode: "onChange",
     resolver: zodResolver(workspaceFormSchemaStep1),
@@ -82,8 +85,11 @@ export const useWorkplace = () => {
       ToastNotify({
         title: "Success",
         msg: "Workplace created successfully",
-      });
-      router.push("/");
+      });                      
+      if (isOpen) {
+        setClose();
+      }
+      router.refresh();
       setLoading(false);
     }
   );

@@ -15,37 +15,37 @@ const Theme: FC<Props> = ({ children }) => {
 
   switch (colorTheme) {
     case "blue":
-      bg_color = "bg-blue-500";
+      bg_color = "bg-blue-700";
       break;
     case "green":
-      bg_color = "bg-green-500";
+      bg_color = "bg-green-700";
       break;
     case "red":
-      bg_color = "bg-red-500";
+      bg_color = "bg-red-700";
       break;
     case "yellow":
-      bg_color = "bg-yellow-500";
+      bg_color = "bg-yellow-700";
       break;
     case "indigo":
-      bg_color = "bg-indigo-500";
+      bg_color = "bg-indigo-700";
       break;
     case "purple":
-      bg_color = "bg-purple-500";
+      bg_color = "bg-purple-700";
       break;
     case "pink":
-      bg_color = "bg-pink-500";
+      bg_color = "bg-pink-700";
       break;
     case "orange":
-      bg_color = "bg-orange-500";
+      bg_color = "bg-orange-700";
       break;
     case "cyan":
-      bg_color = "bg-cyan-500";
+      bg_color = "bg-cyan-700";
       break;
     case "gray":
-      bg_color = "bg-gray-500";
+      bg_color = "bg-gray-700";
       break;
     case "slate":
-      bg_color = "bg-slate-500";
+      bg_color = "bg-slate-700";
       break;
     case "primary":
       bg_color = "bg-primary-dark";
@@ -58,7 +58,7 @@ const Theme: FC<Props> = ({ children }) => {
     <div className={cn("md:px-2 md:pb-2 md:h-screen md:pt-14", bg_color)}>
       <main
         className={cn(
-          "md:ml-[280px] lg:ml-[420px] md:h-full overflow-scroll [&::-webkit-scrollbar-thumb]:rounded-[6px] [&::-webkit-scrollbar-thumb]:bg-foreground/60 [&::-webkit-scrollbar-track]:bg-none [&::-webkit-scrollbar]:w-2",
+          "md:ml-[280px] lg:ml-[420px] md:h-full overflow-y-scroll [&::-webkit-scrollbar-thumb]:rounded-[6px] [&::-webkit-scrollbar-thumb]:bg-foreground/60 [&::-webkit-scrollbar-track]:bg-none [&::-webkit-scrollbar]:w-2",
           theme === "dark" ? "bg-[#232529]" : "bg-white"
         )}
       >

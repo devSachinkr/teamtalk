@@ -1,3 +1,4 @@
+"use client";
 import { Workplaces } from "@/types/app";
 import React from "react";
 import ToolTip from "../global/ToolTip";
@@ -7,13 +8,22 @@ import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { Home, MessageCircle, PlusCircle } from "lucide-react";
+import { useModal } from "@/providers/modal-provider";
+import Dialog from "../global/Dialog";
+import WorkplaceForm from "../forms/workplace/create-workplace";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 type Props = {
   userWorkplacesData: Workplaces[];
   currentWorkplaceData: Workplaces;
 };
-
 const SidebarNav = ({ currentWorkplaceData, userWorkplacesData }: Props) => {
+  const { setOpen } = useModal();
+  const {workplaceId}=useParams();
+  const clickHandler = () => {
+    setOpen(<Dialog dialogContent={<WorkplaceForm />} />);
+  };
   return (
     <nav>
       <ul className="flex flex-col  space-y-4">
@@ -27,35 +37,37 @@ const SidebarNav = ({ currentWorkplaceData, userWorkplacesData }: Props) => {
                   </p>
                   <CardContent className="flex p-0 flex-col">
                     {userWorkplacesData?.map((w) => (
-                      <div
+                      <Link
                         key={w.id}
-                        className="hover:opacity-70 px-2 py-1 flex gap-2"
+                        className={` hover:opacity-70 px-2 py-1 flex items-center gap-2 ${w.id===workplaceId?"bg-accent rounded-md ":''}`}
+                        href={w?.id ?? "#"}
                       >
                         <Avatar>
-                          <AvatarImage src={w.image ?? ""} alt={w.name} />
+                          <AvatarImage src={w?.image ?? ""} alt={w?.name} />
                           <AvatarFallback>
                             {w.name ?? "Workplace avatar"}
                           </AvatarFallback>
                         </Avatar>
                         <div>
                           <Typography
-                            text={w.name}
+                            text={w?.name}
                             variant="p"
                             className="text-white"
                           />
                           <Typography
-                            text={w.invite_code ?? ""}
+                            text={w?.invite_code ?? ""}
                             variant="p"
                             className="text-muted-foreground"
                           />
                         </div>
-                      </div>
+                      </Link>
                     ))}
                     <Separator />
                     <div className="flex items-center gap-2 p-2 ">
                       <Button
                         variant={"secondary"}
                         className="flex items-center gap-2"
+                        onClick={clickHandler}
                       >
                         <PlusCircle />
                         <Typography variant="p" text="Add workplace" />

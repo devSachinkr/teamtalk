@@ -28,37 +28,37 @@ const Sidebar = ({ userWorkPlaceData, currentWorkPlace, user }: Props) => {
 
   switch (colorTheme) {
     case "blue":
-      bg_color = "bg-blue-500";
+      bg_color = "bg-blue-700";
       break;
     case "green":
-      bg_color = "bg-green-500";
+      bg_color = "bg-green-700";
       break;
     case "red":
-      bg_color = "bg-red-500";
+      bg_color = "bg-red-700";
       break;
     case "yellow":
-      bg_color = "bg-yellow-500";
+      bg_color = "bg-yellow-700";
       break;
     case "indigo":
-      bg_color = "bg-indigo-500";
+      bg_color = "bg-indigo-700";
       break;
     case "purple":
-      bg_color = "bg-purple-500";
+      bg_color = "bg-purple-700";
       break;
     case "pink":
-      bg_color = "bg-pink-500";
+      bg_color = "bg-pink-700";
       break;
     case "orange":
-      bg_color = "bg-orange-500";
+      bg_color = "bg-orange-700";
       break;
     case "cyan":
-      bg_color = "bg-cyan-500";
+      bg_color = "bg-cyan-700";
       break;
     case "gray":
-      bg_color = "bg-gray-500";
+      bg_color = "bg-gray-700";
       break;
     case "slate":
-      bg_color = "bg-slate-500";
+      bg_color = "bg-slate-700";
       break;
     case "primary":
       bg_color = "bg-primary-dark";
@@ -109,7 +109,7 @@ const Sidebar = ({ userWorkPlaceData, currentWorkPlace, user }: Props) => {
                       {user.is_away ? (
                         <GoDot className="text-white text-xl" />
                       ) : (
-                        <GoDotFill size={17} className="text-green-500" />
+                        <GoDotFill size={17} className="text-green-700" />
                       )}
                     </div>
                   </div>

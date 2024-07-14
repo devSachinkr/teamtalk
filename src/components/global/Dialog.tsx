@@ -18,8 +18,8 @@ type Props = {
 const Dialog = ({ dialogContent }: Props) => {
   const { isOpen, setClose } = useModal();
   return (
-    <ShadCnDialog  open={isOpen} onOpenChange={setClose}>
-      <DialogContent className="w-full">{dialogContent}</DialogContent>
+    <ShadCnDialog  open={isOpen} onOpenChange={setClose} >
+      <DialogContent className="w-full h-[580px] overflow-y-auto">{dialogContent}</DialogContent>
     </ShadCnDialog>
   );
 };

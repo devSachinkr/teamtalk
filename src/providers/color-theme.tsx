@@ -1,4 +1,5 @@
 "use client";
+import { Channel } from "@/types/app";
 import { colors } from "@/types/color";
 import { createContext, FC, useContext, useEffect, useState } from "react";
 type ColorThemeProvider = {
@@ -7,6 +8,9 @@ type ColorThemeProvider = {
 type ColorThemeContext = {
   colorTheme: colors;
   selectColorTheme: (colorTheme: colors) => void;
+  setChannels: (channels: Channel[]) => void;
+  channels: Channel[] | undefined;
+  color:string;
 };
 
 const ColorThemeContext = createContext<ColorThemeContext | undefined>(
@@ -14,6 +18,7 @@ const ColorThemeContext = createContext<ColorThemeContext | undefined>(
 );
 
 export const ColorThemeProvider: FC<ColorThemeProvider> = ({ children }) => {
+  const [channels, setChannels] = useState<Channel[]|undefined>(undefined);
   const [color, setColor] = useState<colors>(() => {
     const color =
       typeof localStorage !== "undefined"
@@ -36,6 +41,9 @@ export const ColorThemeProvider: FC<ColorThemeProvider> = ({ children }) => {
   const value: ColorThemeContext = {
     colorTheme: color,
     selectColorTheme: selectColor,
+    setChannels,
+    channels,
+    color
   };
   if (!isMounted) {
     return null;

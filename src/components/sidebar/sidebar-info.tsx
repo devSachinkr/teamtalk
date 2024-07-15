@@ -9,14 +9,20 @@ import { useModal } from "@/providers/modal-provider";
 import Dialog from "../global/Dialog";
 import ChannelForm from "../forms/channel/channel-form";
 import { useParams } from "next/navigation";
+import { useChannel } from "@/hooks/channel";
+import Link from "next/link";
+import { Workplaces } from "@/types/app";
 
 type Props = {};
 
-const SidebarInfo = (props: Props) => {
-  const { workplaceId } = useParams();
-  const { colorTheme } = useColorTheme();
+const SidebarInfo = () => {
+  const { workplaceId, channelId } = useParams();
+  const { colorTheme ,color} = useColorTheme();
   let bg_color = "bg-primary-light";
   const { setOpen } = useModal();
+  const { channels } = useChannel({
+    workplaceId: String(workplaceId),
+  });
   switch (colorTheme) {
     case "blue":
       bg_color = "bg-blue-900";
@@ -122,23 +128,30 @@ const SidebarInfo = (props: Props) => {
               );
             }}
             collapsibleContent={
-              <>
+              channels?.length ? (
+                channels?.map((c) => (
+                  <Link
+                    key={c?.id}
+                    href={`/workplace/${workplaceId}/channel/${c?.id}`}
+                  >
+                    <Typography
+                      variant="p"
+                      text={`#${c?.name!}`}
+                      className={cn(
+                        "px-2 py-1 rounded-sm cursor-pointer",
+                        hoverBg,
+                        c?.id === channelId && "" 
+                      )}
+                    />
+                  </Link>
+                ))
+              ) : (
                 <Typography
-                  variant="p"
-                  text="# channel-name-1"
+                  text="No Channels Available | Add Channels Now!"
                   className={cn("px-2 py-1 rounded-sm cursor-pointer", hoverBg)}
-                />
-                <Typography
                   variant="p"
-                  text="# channel-name-2"
-                  className={cn("px-2 py-1 rounded-sm cursor-pointer", hoverBg)}
                 />
-                <Typography
-                  variant="p"
-                  text="# channel-name-3"
-                  className={cn("px-2 py-1 rounded-sm cursor-pointer", hoverBg)}
-                />
-              </>
+              )
             }
           />
         </div>

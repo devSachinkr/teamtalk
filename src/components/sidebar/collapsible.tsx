@@ -23,7 +23,7 @@ const Collapsible = ({
   text,
   addHandler,
 }: Props) => {
-  const [isChannelCollapsed, setIsChannelCollapsed] = useState(false);
+  const [isChannelCollapsed, setIsChannelCollapsed] = useState(true);
   const { colorTheme } = useColorTheme();
   let hoverBg = "hover:bg-primary-dark";
   switch (colorTheme) {

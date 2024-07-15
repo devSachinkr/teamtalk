@@ -1,9 +1,12 @@
 "use client";
 
 import { createChannel } from "@/actions/create-channel";
+import { getChannels } from "@/actions/get-channels";
 import ToastNotify from "@/components/global/ToastNotify";
+import { useColorTheme } from "@/providers/color-theme";
 import { useModal } from "@/providers/modal-provider";
 import { createChannelSchema } from "@/schema/form";
+import { Channel } from "@/types/app";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -22,6 +25,14 @@ export const useChannel = ({ workplaceId }: { workplaceId: string }) => {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { handleSubmit } = form;
+ const {setChannels,channels}=useColorTheme();
+  const getWorkplaceData = async () => {
+    const res = await getChannels(workplaceId);
+    // @ts-ignore
+    setChannels(res);
+    return res;
+  };
+
   const handleCreate = handleSubmit(
     async (data: z.infer<typeof createChannelSchema>) => {
       setLoading(true);
@@ -37,9 +48,10 @@ export const useChannel = ({ workplaceId }: { workplaceId: string }) => {
         title: "Success",
         msg: `${res?.message}`,
       });
-      setLoading(false);
+      await getWorkplaceData();
       setClose();
       router.refresh();
+      setLoading(false);
     }
   );
   useEffect(() => {
@@ -47,9 +59,14 @@ export const useChannel = ({ workplaceId }: { workplaceId: string }) => {
       name: "",
     });
   }, [workplaceId]);
+  useEffect(() => {
+    getWorkplaceData();
+  }, [workplaceId]);
   return {
     form,
     handleCreate,
     loading,
+    getWorkplaceData,
+    channels,
   };
 };

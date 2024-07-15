@@ -40,7 +40,7 @@ const SidebarNav = ({ currentWorkplaceData, userWorkplacesData }: Props) => {
                       <Link
                         key={w.id}
                         className={` hover:opacity-70 px-2 py-1 flex items-center gap-2 ${w.id===workplaceId?"bg-accent rounded-md ":''}`}
-                        href={w?.id ?? "#"}
+                        href={`/workplace/${w?.id}`}
                       >
                         <Avatar>
                           <AvatarImage src={w?.image ?? ""} alt={w?.name} />

@@ -25,9 +25,10 @@ export type Workplaces = {
 };
 
 export type Channel = {
-  id: string;
-  members: string[] | null;
-  name: string;
-  regulators: string[] | null;
-  user_id: string;
-};
+  id: string
+  members: string[] | null
+  name: string
+  regulators: string[] | null
+  user_id: string
+  workplace_id: string
+}|undefined;

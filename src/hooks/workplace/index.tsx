@@ -85,7 +85,7 @@ export const useWorkplace = () => {
       ToastNotify({
         title: "Success",
         msg: "Workplace created successfully",
-      });                      
+      });
       if (isOpen) {
         setClose();
       }

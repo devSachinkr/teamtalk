@@ -5,13 +5,18 @@ import React from "react";
 import Collapsible2 from "./collapsible2";
 import Collapsible from "./collapsible";
 import Typography from "../global/typography";
+import { useModal } from "@/providers/modal-provider";
+import Dialog from "../global/Dialog";
+import ChannelForm from "../forms/channel/channel-form";
+import { useParams } from "next/navigation";
 
 type Props = {};
 
 const SidebarInfo = (props: Props) => {
+  const { workplaceId } = useParams();
   const { colorTheme } = useColorTheme();
   let bg_color = "bg-primary-light";
-
+  const { setOpen } = useModal();
   switch (colorTheme) {
     case "blue":
       bg_color = "bg-blue-900";
@@ -107,6 +112,15 @@ const SidebarInfo = (props: Props) => {
         <div>
           <Collapsible
             text="Channels"
+            addHandler={() => {
+              setOpen(
+                <Dialog
+                  dialogContent={
+                    <ChannelForm workplaceId={workplaceId as string} />
+                  }
+                />
+              );
+            }}
             collapsibleContent={
               <>
                 <Typography

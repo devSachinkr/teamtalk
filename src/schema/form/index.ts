@@ -13,3 +13,7 @@ export const workspaceFormSchemaStep1 = z.object({
 export const workspaceFormSchemaStep2 = z.object({
   imageUrl: z.string().url({ message: "Invalid image url" }).optional(),
 });
+
+export const createChannelSchema = z.object({
+  name: z.string().min(2, { message: "Name is required" }),
+});

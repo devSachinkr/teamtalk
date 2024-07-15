@@ -14,9 +14,15 @@ type Props = {
   collapsibleTrigger?: string | React.ReactNode;
   collapsibleContent: string | React.ReactNode;
   text: string;
+  addHandler?: () => void;
 };
 
-const Collapsible = ({ collapsibleContent, collapsibleTrigger,text }: Props) => {
+const Collapsible = ({
+  collapsibleContent,
+  collapsibleTrigger,
+  text,
+  addHandler,
+}: Props) => {
   const [isChannelCollapsed, setIsChannelCollapsed] = useState(false);
   const { colorTheme } = useColorTheme();
   let hoverBg = "hover:bg-primary-dark";
@@ -78,13 +84,12 @@ const Collapsible = ({ collapsibleContent, collapsibleTrigger,text }: Props) => 
             "cursor-pointer p-2 rounded-full transition-all duration-300",
             hoverBg
           )}
+          onClick={addHandler}
         >
-          <FaPlus />
+          <FaPlus  />
         </div>
       </div>
-      <CollapsibleContent>
-         {collapsibleContent}
-      </CollapsibleContent>
+      <CollapsibleContent>{collapsibleContent}</CollapsibleContent>
     </ShadcnCollapsible>
   );
 };

@@ -17,3 +17,16 @@ export const workspaceFormSchemaStep2 = z.object({
 export const createChannelSchema = z.object({
   name: z.string().min(2, { message: "Name is required" }),
 });
+export const channelUploadFileSchema = z.object({
+  file: z
+    .instanceof(FileList)
+    .refine((files) => files.length === 1, { message: "File is required " })
+    .refine((files) => {
+      const file = files?.[0];
+      return (
+        file?.type === "image/png" ||
+        file?.type === "image/jpeg" ||
+        file?.type === "application/pdf"
+      );;
+    },{message:"File must be image or pdf"}),
+});

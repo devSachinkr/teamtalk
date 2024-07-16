@@ -24,11 +24,25 @@ export type Workplaces = {
   super_admin: string;
 };
 
-export type Channel = {
-  id: string
-  members: string[] | null
-  name: string
-  regulators: string[] | null
-  user_id: string
-  workplace_id: string
-}|undefined;
+export type Channel =
+  | {
+      id: string;
+      members: string[] | null;
+      name: string;
+      regulators: string[] | null;
+      user_id: string;
+      workplace_id: string;
+    }
+  | undefined;
+
+export type Messsage = {
+  channel_id: string;
+  content: string | null;
+  created_at: string;
+  file_url: string | null;
+  id: string;
+  id_deleted: boolean;
+  updated_at: string;
+  userId: string;
+  workplace_id: string;
+};

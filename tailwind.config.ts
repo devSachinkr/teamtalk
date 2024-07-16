@@ -28,7 +28,7 @@ module.exports = withUt({
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
           dark: "#320B36",
-          light:"#1D0F20"
+          light: "#1D0F20",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -76,5 +76,5 @@ module.exports = withUt({
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 }) satisfies Config;

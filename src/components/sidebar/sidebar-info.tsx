@@ -140,7 +140,7 @@ const SidebarInfo = () => {
                       className={cn(
                         "px-2 py-1 rounded-sm cursor-pointer",
                         hoverBg,
-                        c?.id === channelId && "" 
+                        c?.id === channelId && "glass-morphism" 
                       )}
                     />
                   </Link>

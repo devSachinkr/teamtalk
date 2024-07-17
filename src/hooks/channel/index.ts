@@ -6,15 +6,17 @@ import ToastNotify from "@/components/global/ToastNotify";
 import { supabaseClient } from "@/lib/supabase/create-client";
 import { useColorTheme } from "@/providers/color-theme";
 import { useModal } from "@/providers/modal-provider";
+import { useWebSocket } from "@/providers/web-socket";
 import { createChannelSchema, channelUploadFileSchema } from "@/schema/form";
-import { Channel, USER, Workplaces } from "@/types/app";
+import { Channel, MessageWithUser, USER, Workplaces } from "@/types/app";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { v4 } from "uuid";
 import { z } from "zod";
-
+import { useInfiniteQuery } from "@tanstack/react-query";
+import axios from "axios";
 export const useChannel = ({ workplaceId }: { workplaceId: string }) => {
   const { setClose } = useModal();
   const form = useForm<z.infer<typeof createChannelSchema>>({
@@ -77,11 +79,14 @@ export const useChannelFileUpload = ({
   channelId,
   workplace,
   user,
+  recipientId,
 }: {
   channelId: string;
   workplace: Workplaces;
   user: USER;
+  recipientId: string | undefined;
 }) => {
+  const { setClose } = useModal();
   const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof channelUploadFileSchema>>({
     resolver: zodResolver(channelUploadFileSchema),
@@ -139,30 +144,64 @@ export const useChannelFileUpload = ({
         setLoading(false);
         return;
       }
-      const { error: messageError } = await supabase.from("messages").insert({
-        file_url: data.path,
-        userId: user.id,
-        workplace_id: workplace.id,
-        channel_id: channelId,
-      });
 
-      if (messageError) {
+      let messageInsertError;
+
+      if (recipientId) {
+        const { error: DirectMessageError, data: directMessageData } =
+          await supabase.from("direct_messgaes").insert({
+            file_url: data.path,
+            userId: user.id,
+            user_one: user.id,
+            user_two: recipientId,
+          });
+        if (DirectMessageError) {
+          ToastNotify({
+            title: "Oppse",
+            msg: DirectMessageError.message,
+          });
+          console.log(DirectMessageError);
+          setLoading(false);
+          messageInsertError = DirectMessageError;
+          return;
+        }
         ToastNotify({
-          title: "Oppse",
-          msg: messageError.message,
+          title: "Success",
+          msg: "Message sent successfully",
         });
-        console.log(messageError);
-        setLoading(false);
-        return;
-      }
-      ToastNotify({
-        title: "Success",
-        msg: "File uploaded successfully",
-      });
-      form.reset();
-      router.refresh();
+        form.reset();
+        setClose();
+        router.refresh();
 
-      setLoading(false);
+        setLoading(false);
+      } else {
+        const { error: messageError } = await supabase.from("messages").insert({
+          file_url: data.path,
+          userId: user.id,
+          workplace_id: workplace.id,
+          channel_id: channelId,
+        });
+
+        if (messageError) {
+          ToastNotify({
+            title: "Oppse",
+            msg: messageError.message,
+          });
+          console.log(messageError);
+          setLoading(false);
+          messageInsertError = messageError;
+          return;
+        }
+        ToastNotify({
+          title: "Success",
+          msg: "File uploaded successfully",
+        });
+        form.reset();
+        setClose();
+        router.refresh();
+
+        setLoading(false);
+      }
     }
   );
 
@@ -172,4 +211,46 @@ export const useChannelFileUpload = ({
     imageRef,
     loading,
   };
+};
+
+type useFetchMessages = {
+  apiUrl: string;
+  queryKey: string;
+  paramKey: "channelId" | "recipientId";
+  paramValue: string;
+  pageSize: number;
+};
+
+export const useFetchMessages = ({
+  apiUrl,
+  pageSize,
+  paramKey,
+  paramValue,
+  queryKey,
+}: useFetchMessages) => {
+  const { isConnected } = useWebSocket();
+
+  const fetchMessage = async ({
+    pageParam = 0,
+  }: any): Promise<{ data: MessageWithUser[] }> => {
+    const url = `${apiUrl}?${paramKey}=${encodeURIComponent(
+      paramValue
+    )}&page=${pageParam}&size=${pageSize}`;
+    const { data } = await axios.get<MessageWithUser>(url);
+    console.log(data)
+    return data as any;
+  };
+
+  return useInfiniteQuery<{ data: MessageWithUser[] }, Error>({
+    queryKey: [queryKey, paramValue],
+    queryFn: fetchMessage,
+    getNextPageParam: (lastpage, allpages) =>
+      lastpage.data.length === pageSize ? allpages.length : undefined,
+    refetchInterval: isConnected ? false : 1000,
+    retry: 3,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    initialPageParam: 0,
+  });
 };

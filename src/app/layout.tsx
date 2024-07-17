@@ -30,12 +30,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ColorThemeProvider>
-            <Theme>
               <ModalProvider>
                 {children}
                 <Toaster />
               </ModalProvider>
-            </Theme>
           </ColorThemeProvider>
         </ThemeProvider>
       </body>

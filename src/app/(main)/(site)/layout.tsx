@@ -1,13 +1,24 @@
-import React from 'react'
+import Theme from "@/components/global/theme";
+import { QueryProvider } from "@/providers/query-provider";
+import { WebSocketProvider } from "@/providers/web-socket";
+import React from "react";
 
 type Props = {
-    children:React.ReactNode
-}
+  children: React.ReactNode;
+};
 
-const layout = ({children}: Props) => {
+const layout = ({ children }: Props) => {
   return (
-    <div>{children}</div>
-  )
-}
+    <div>
+      <WebSocketProvider>
+        <Theme>
+          <QueryProvider>
+          {children}
+          </QueryProvider>
+          </Theme>
+      </WebSocketProvider>
+    </div>
+  );
+};
 
-export default layout
+export default layout;

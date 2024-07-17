@@ -17,13 +17,15 @@ import FileUpload from "./file-upload";
 import Card from "./Card";
 import { USER, Workplaces } from "@/types/app";
 import ChatFileUpload from "../channel/chat-file-upload";
+import { useColorTheme } from "@/providers/color-theme";
 type Props = {
   apiUrl: string;
-  type: "channel" | "directMessage";
+  type: "Channels" | "DirectMessage";
   channelId: string;
   workplaceId: string;
   workplace: Workplaces;
-  user:USER
+  user: USER;
+  recipientId: string | undefined;
 };
 const TextEditor = ({
   apiUrl,
@@ -31,8 +33,11 @@ const TextEditor = ({
   channelId,
   workplaceId,
   workplace,
-  user
+  user,
+  recipientId,
 }: Props) => {
+  const { channels } = useColorTheme();
+  const channel = channels?.find((channel) => channel?.id === channelId);
   const [content, setContent] = useState<string>("");
   const { setOpen } = useModal();
   const [loading, setLoading] = useState<boolean>(false);
@@ -48,6 +53,7 @@ const TextEditor = ({
     onUpdate: ({ editor }) => {
       setContent(editor.getHTML());
     },
+    immediatelyRender: false,
   });
   const sendMessage = async () => {
     setLoading(true);
@@ -58,12 +64,17 @@ const TextEditor = ({
       });
     }
     try {
-      const res = await axios.post(
-        `${apiUrl}?channelId=${channelId}&workplaceId=${workplaceId}`,
-        {
-          content,
-        }
-      );
+      const payload = {
+        content,
+        type,
+      };
+      let endpoint = apiUrl;
+      if (type === "Channels" && channelId) {
+        endpoint += `?channelId=${channelId}&workplaceId=${workplaceId}`;
+      } else if (type === "DirectMessage" && recipientId) {
+        endpoint += `?recipientId=${recipientId}&workplaceId=${workplaceId}`;
+      }
+      const res = await axios.post(endpoint, payload);
       setContent("");
       editor?.commands.clearContent();
       ToastNotify({
@@ -85,7 +96,12 @@ const TextEditor = ({
             cardClasses="border-none"
             cardDesc="Choose a file which you want to share with your team."
           >
-            <ChatFileUpload workplace={workplace} channelId={channelId} user={user} />
+            <ChatFileUpload
+              workplace={workplace}
+              channelId={channelId}
+              user={user}
+              recipientId={recipientId}
+            />
           </Card>
         }
       />

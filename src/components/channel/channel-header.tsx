@@ -7,7 +7,9 @@ import { useParams } from "next/navigation";
 
 const ChannelHeader = () => {
   const { channels } = useColorTheme();
+  //@ts-ignore
   const { channelId } = useParams();
+
   const channel =
     channels?.find((channel) => channel?.id === channelId) ?? null;
   return (

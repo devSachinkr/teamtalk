@@ -21,13 +21,15 @@ type Props = {
   workplace: Workplaces;
   channelId: string;
   user: USER;
+  recipientId?: string | undefined;
 };
 
-const ChatFileUpload = ({ channelId, workplace, user }: Props) => {
+const ChatFileUpload = ({ channelId, workplace, user,recipientId }: Props) => {
   const { form, handleUpload, imageRef,loading } = useChannelFileUpload({
     channelId,
     workplace,
     user,
+    recipientId
   });
   return (
     <Form {...form}>

@@ -1,11 +1,9 @@
 import { getUserDataPages } from "@/actions/get-user-data";
 import { supabaseServerPages } from "@/lib/supabase/supabaseServerPages";
+import { SocketIoRes } from "@/types/app";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: SocketIoRes) {
   if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
   try {
@@ -38,12 +36,16 @@ export default async function handler(
         channel_id: channelId,
         userId: userData.id,
         workplace_id: workplaceId,
-      }).select("*,user:userId(*)").single();
+      })
+      .select("*,user:userId(*)")
+      .order("created_at", { ascending: true })
+      .single();
 
     if (messageError) {
       console.log("message creation error", messageError);
       return res.status(500).json({ error: "Internal server error" });
     }
+    res.socket?.server?.io.emit(`channel:${channelId}:channel-message`, messageData);
     return res.status(200).json({ data: messageData });
   } catch (error) {
     console.log("message creation error", error);

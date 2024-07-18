@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/card";
 
 type Props = {
-  cardTitle?: string|React.ReactNode;
+  cardTitle?: string | React.ReactNode;
   children: string | React.ReactNode;
-  cardDesc?: string |React.ReactNode;
+  cardDesc?: string | React.ReactNode;
   cardFooter?: string | React.ReactNode;
   contentClasses?: string;
   cardClasses?: string;
@@ -32,11 +32,7 @@ const Card = ({
         {cardDesc && <CardDescription>{cardDesc}</CardDescription>}
       </CardHeader>
       <CardContent className={contentClasses}>{children}</CardContent>
-      {cardFooter && (
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      )}
+      {cardFooter && <CardFooter className="text-muted-foreground">{cardFooter}</CardFooter>}
     </ShadcnCard>
   );
 };

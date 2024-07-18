@@ -87,6 +87,7 @@ export const useChannelFileUpload = ({
   recipientId: string | undefined;
 }) => {
   const { setClose } = useModal();
+  const router=useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof channelUploadFileSchema>>({
     resolver: zodResolver(channelUploadFileSchema),
@@ -95,11 +96,10 @@ export const useChannelFileUpload = ({
       file: undefined,
     },
   });
-  const imageRef = form.register("file");
-  const router = useRouter();
+  const imageRef = form.register("file");             
   const { handleSubmit } = form;
   const handleUpload = handleSubmit(
-    async (values: z.infer<typeof channelUploadFileSchema>) => {
+    async (values: z.infer<typeof channelUploadFileSchema>) => {       
       setLoading(true);
       const id = v4();
       if (!values.file?.[0]) {

@@ -21,12 +21,19 @@ export const channelUploadFileSchema = z.object({
   file: z
     .instanceof(FileList)
     .refine((files) => files.length === 1, { message: "File is required " })
-    .refine((files) => {
-      const file = files?.[0];
-      return (
-        file?.type === "image/png" ||
-        file?.type === "image/jpeg" ||
-        file?.type === "application/pdf"
-      );;
-    },{message:"File must be image or pdf"}),
+    .refine(
+      (files) => {
+        const file = files?.[0];
+        return (
+          file?.type === "image/png" ||
+          file?.type === "image/jpeg" ||
+          file?.type === "application/pdf"
+        );
+      },
+      { message: "File must be image or pdf" }
+    ),
+});
+
+export const chatFormSchema = z.object({
+  content: z.string().min(1, { message: "Message is required" }),
 });

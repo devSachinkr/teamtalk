@@ -21,7 +21,7 @@ export type Workplaces = {
   id: string;
   image: string | null;
   invite_code: string | null;
-  members: string[] | null;
+  members: USER[] | null;
   name: string;
   regulators: string[] | null;
   slug: string;

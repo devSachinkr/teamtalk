@@ -25,7 +25,7 @@ type Props = {
 const Sidebar = ({ userWorkPlaceData, currentWorkPlace, user }: Props) => {
   const { colorTheme } = useColorTheme();
   let bg_color = "bg-primary-dark";
-
+  if (!user) return;
   switch (colorTheme) {
     case "blue":
       bg_color = "bg-blue-700";
@@ -85,7 +85,9 @@ const Sidebar = ({ userWorkPlaceData, currentWorkPlace, user }: Props) => {
         </div>
         <ToolTip
           contentClasses="text-white bg-black border-black"
-          content={<Typography variant="p" text={user.name ?? user.email} />}
+          content={
+            <Typography variant="p" text={user.name ?? user.email ?? ""} />
+          }
           side="right"
         >
           <div>
@@ -167,7 +169,7 @@ const Sidebar = ({ userWorkPlaceData, currentWorkPlace, user }: Props) => {
                       variant="p"
                       className="hover:text-white hover:bg-blue-700 px-2 py-1 rounded cursor-pointer"
                     />
-                    <PreferencesDialog/>
+                    <PreferencesDialog />
                     <Separator />
                     <div className="gap-2 items-center flex hover:text-white hover:bg-blue-700 px-2 py-1 rounded  cursor-pointer">
                       <IoDiamondOutline className="text-orange-400" />

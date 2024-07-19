@@ -13,16 +13,26 @@ import Dialog from "../global/Dialog";
 import WorkplaceForm from "../forms/workplace/create-workplace";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-
+import { Copy } from "lucide-react";
+import ToastNotify from "../global/ToastNotify";
 type Props = {
   userWorkplacesData: Workplaces[];
   currentWorkplaceData: Workplaces;
 };
 const SidebarNav = ({ currentWorkplaceData, userWorkplacesData }: Props) => {
   const { setOpen } = useModal();
-  const {workplaceId}=useParams();
+  // @ts-ignore
+  const { workplaceId } = useParams();
   const clickHandler = () => {
     setOpen(<Dialog dialogContent={<WorkplaceForm />} />);
+  };
+  const copyInviteCode = (code: string) => {
+
+    navigator.clipboard.writeText(`${window.location.origin}/create-workplace/${code}`);
+    ToastNotify({
+      title:"Success",
+      msg:"Invite link copy to clipboard",
+    })
   };
   return (
     <nav>
@@ -39,7 +49,9 @@ const SidebarNav = ({ currentWorkplaceData, userWorkplacesData }: Props) => {
                     {userWorkplacesData?.map((w) => (
                       <Link
                         key={w.id}
-                        className={` hover:opacity-70 px-2 py-1 flex items-center gap-2 ${w.id===workplaceId?"bg-accent rounded-md ":''}`}
+                        className={` hover:opacity-70 px-2 py-1 flex items-center gap-2 ${
+                          w.id === workplaceId ? "bg-accent rounded-md " : ""
+                        }`}
                         href={`/workplace/${w?.id}`}
                       >
                         <Avatar>
@@ -54,11 +66,16 @@ const SidebarNav = ({ currentWorkplaceData, userWorkplacesData }: Props) => {
                             variant="p"
                             className="text-white"
                           />
-                          <Typography
-                            text={w?.invite_code ?? ""}
-                            variant="p"
-                            className="text-muted-foreground"
-                          />
+                          <div className="flex items-center gap-x-2">
+                            <Typography
+                              text="Copy invite link"
+                              variant="p"
+                              className="text-muted-foreground"
+                            />
+                            <Copy
+                              onClick={() => copyInviteCode(w?.invite_code!)}
+                            />
+                          </div>
                         </div>
                       </Link>
                     ))}

@@ -8,5 +8,6 @@ export const getUserWorkplace = async (workplace_id: string[]) => {
     .from("workplaces")
     .select("*")
     .in("id", workplace_id);
+    
   return { data, error };
 };

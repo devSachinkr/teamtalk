@@ -48,7 +48,7 @@ async function handler(req: NextApiRequest, res: SocketIoRes) {
       await updateMessageContent(supabase, messageId as string, content);
     } else if (req.method === "DELETE") {
       await deleteMessage(supabase, messageId as string);
-    }
+    } 
     const { data, error } = await supabase
       .from("messages")
       .select("*,user: userId(*)")

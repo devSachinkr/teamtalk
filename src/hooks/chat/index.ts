@@ -3,11 +3,14 @@
 import ToastNotify from "@/components/global/ToastNotify";
 import { supabaseClient } from "@/lib/supabase/create-client";
 import { useModal } from "@/providers/modal-provider";
+import { useWebSocket } from "@/providers/web-socket";
 import { chatFormSchema } from "@/schema/form";
+import { MessageWithUser } from "@/types/app";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -88,12 +91,12 @@ export const useChatEdit = ({
     }
   );
   const handleDelete = async (messageId: string) => {
-    const url=`${socketUrl}/${messageId}?${new URLSearchParams(socketQuery)}`
+    const url = `${socketUrl}/${messageId}?${new URLSearchParams(socketQuery)}`;
     setLoading(true);
-     await axios.delete(url);
-     setClose();
-     setLoading(false);
-     router.refresh();
+    await axios.delete(url);
+    setClose();
+    setLoading(false);
+    router.refresh();
   };
   useEffect(() => {
     form.reset({
@@ -109,4 +112,112 @@ export const useChatEdit = ({
     setIsEditing,
     handleDelete,
   };
+};
+
+type UserChatConnection = {
+  addKey: string;
+  updateKey: string;
+  queryKey: string;
+  paramValue: string;
+};
+
+export const useChatSocketConnection = ({
+  addKey,
+  paramValue,
+  queryKey,
+  updateKey,
+}: UserChatConnection) => {
+  const { socket } = useWebSocket();
+  const queryClient = useQueryClient();
+
+  const handleUpdateMessage = (message: any) => {
+    queryClient.setQueryData([queryKey, paramValue], (data: any) => {
+      if (!data || !data.pages || !data.pages.length) {
+        return data;
+      }
+      const newData = data.pages.map((page: any) => {
+        return {
+          ...page,
+          data: page.data.map((d: MessageWithUser) => {
+            if (d.id === message.id) {
+              return message;
+            }
+            return d;
+          }),
+        };
+      });
+      return {
+        ...data,
+        pages: newData,
+      };
+    });
+  };
+
+  const handleAddMessage = (message: MessageWithUser) => {
+    queryClient.setQueryData([queryKey, paramValue], (data: any) => {
+      if (!data || !data.pages || data.pages.length === 0) {
+        return data;
+      }
+      const newPages = [...data.pages];
+      newPages[0] = {
+        ...newPages[0],
+        data: [...newPages[0].data, message],
+      };
+
+      return {
+        ...data,
+        pages: newPages,
+      };
+    });
+  };
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+    socket.on(addKey, (message: MessageWithUser) => {
+      handleAddMessage(message);
+    });
+    socket.on(updateKey, (message: MessageWithUser) => {
+      handleUpdateMessage(message);
+    });
+
+    return () => {
+      socket.off(addKey, handleAddMessage);
+      socket.off(updateKey, handleUpdateMessage);
+    };
+  }, [socket, addKey, updateKey, queryClient, queryKey]);
+};
+
+export const useChatScrollRef = ({
+  bottomRef,
+  chatRef,
+  count,
+}: {
+  chatRef: RefObject<HTMLDivElement>;
+  bottomRef: RefObject<HTMLDivElement>;
+  count: number;
+}) => {
+  const [hasInitilized, setHasInitilized] = useState(false);
+  useEffect(() => {
+    const bottomDiv = bottomRef.current;
+    const topDiv = chatRef.current;
+    const autoScroll = () => {
+      if (!hasInitilized || bottomDiv) {
+        setHasInitilized(true);
+        return true;
+      }
+      if (!topDiv) {
+        return false;
+      }
+      const distanceFromBottom = topDiv.scrollTop - topDiv.clientHeight;
+      return distanceFromBottom <= 100;
+    };
+
+    if (autoScroll()) {
+      setTimeout(() => {
+        bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }, [bottomRef, chatRef, hasInitilized, count]);
 };

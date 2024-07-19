@@ -6,6 +6,7 @@ import Typography from "../global/typography";
 import TextEditor from "../global/text-editor";
 import { USER, Workplaces } from "@/types/app";
 import ChatMessages from "./chat-messages";
+import SearchBar from "./search-bar";
 type Props = {
   workplace: Workplaces;
   channelId: string;
@@ -46,6 +47,11 @@ const ChatGroup = ({
           userWorkPlaceData={userWorkPlaceData!}
         />
         <SidebarInfo />
+        <SearchBar
+          currentWorkPlace={workplace}
+          channelId={channelId}
+          loggedInUser={user.id}
+        />
         <div className="p-4 relative overflow-hidden">
           <ChannelHeader />
           <div className="mt-14">

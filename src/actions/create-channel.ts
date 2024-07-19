@@ -28,7 +28,7 @@ export const createChannel = async (name: string, workplaceId: string) => {
     if (res.data) {
       // update channel members
       const { updatedMembersError } = await updateChannelMembers(
-        res.data[0].id,
+        res.data[0]?.id!,
         user.data?.id!
       );
       if (updatedMembersError)
@@ -41,7 +41,7 @@ export const createChannel = async (name: string, workplaceId: string) => {
       // update user channels
       const { updatedUserChannelsError } = await updateUserChannels(
         user.data?.id!,
-        res.data[0].id!
+        res.data[0]?.id!
       );
       if (updatedUserChannelsError) {
         return {
@@ -55,9 +55,9 @@ export const createChannel = async (name: string, workplaceId: string) => {
       //   update workplace channels
       const { updatedWorkplaceChannelsError } = await updateWorkplaceChannels(
         workplaceId,
-        res.data[0].id!
+        res.data[0]?.id!
       );
-      if (updatedWorkplaceChannelsError) { 
+      if (updatedWorkplaceChannelsError) {
         return {
           status: 500,
           message:
@@ -88,8 +88,10 @@ export const createChannel = async (name: string, workplaceId: string) => {
   }
 };
 
-const updateChannelMembers = async (channelId: string, userId: string) => {
-  console.log(channelId, userId);
+export const updateChannelMembers = async (
+  channelId: string,
+  userId: string
+) => {
   const supabase = await superbaseCreateClient();
   const { error, data } = await supabase.rpc("update_channel_members", {
     new_member: userId,
@@ -104,7 +106,7 @@ const updateChannelMembers = async (channelId: string, userId: string) => {
   };
 };
 
-const updateUserChannels = async (userId: string, channelId: string) => {
+export const updateUserChannels = async (userId: string, channelId: string) => {
   const supabase = await superbaseCreateClient();
   const { error, data } = await supabase.rpc("update_user_channels", {
     channel_id: channelId,
@@ -134,5 +136,25 @@ const updateWorkplaceChannels = async (
   return {
     updatedWorkplaceChannels: data,
     updatedWorkplaceChannelsError: error,
+  };
+};
+
+export const updateChannelRegulators = async (
+  channelId: string,
+  userId: string
+) => {
+  const supabase = await superbaseCreateClient();
+  const { data, error } = await supabase.rpc("update_channel_regulators", {
+    channel_id: channelId,
+    new_regulator: userId,
+  });
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+  return {
+    data,
+    error,
   };
 };

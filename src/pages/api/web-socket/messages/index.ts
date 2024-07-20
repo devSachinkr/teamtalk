@@ -4,6 +4,7 @@ import { SocketIoRes } from "@/types/app";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: SocketIoRes) {
+
   if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
   try {

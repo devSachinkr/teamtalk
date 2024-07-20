@@ -5,6 +5,8 @@ import { type SupabaseClient } from "@supabase/supabase-js";
 import { NextApiRequest } from "next";
 
 async function handler(req: NextApiRequest, res: SocketIoRes) {
+
+
   if (!["PATCH", "DELETE"].includes(req.method!)) {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -28,7 +30,6 @@ async function handler(req: NextApiRequest, res: SocketIoRes) {
       .eq("id", messageId)
       .single();
     if (MessageError || !MessageData) {
-      console.log("yahi dikt hai");
       console.log(MessageError);
       return res.status(404).json({ messages: "Bad request" });
     }

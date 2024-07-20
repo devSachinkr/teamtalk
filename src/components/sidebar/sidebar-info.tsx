@@ -13,11 +13,14 @@ import { useChannel } from "@/hooks/channel";
 import Link from "next/link";
 import { Workplaces } from "@/types/app";
 
-type Props = {};
+type Props = {
+  workplaces: Workplaces;
+};
 
-const SidebarInfo = () => {
+const SidebarInfo = ({ workplaces }: Props) => {
+  // @ts-ignore
   const { workplaceId, channelId } = useParams();
-  const { colorTheme ,color} = useColorTheme();
+  const { colorTheme, color } = useColorTheme();
   let bg_color = "bg-primary-light";
   const { setOpen } = useModal();
   const { channels } = useChannel({
@@ -140,7 +143,7 @@ const SidebarInfo = () => {
                       className={cn(
                         "px-2 py-1 rounded-sm cursor-pointer",
                         hoverBg,
-                        c?.id === channelId && "glass-morphism" 
+                        c?.id === channelId && "glass-morphism"
                       )}
                     />
                   </Link>
@@ -160,21 +163,21 @@ const SidebarInfo = () => {
             text="Direct Messages"
             collapsibleContent={
               <>
-                <Typography
-                  text="User Name-1"
-                  className={cn("px-2 py-1 rounded-sm cursor-pointer", hoverBg)}
-                  variant="p"
-                />
-                <Typography
-                  text="User Name-1"
-                  className={cn("px-2 py-1 rounded-sm cursor-pointer", hoverBg)}
-                  variant="p"
-                />
-                <Typography
-                  text="User Name-1"
-                  className={cn("px-2 py-1 rounded-sm cursor-pointer", hoverBg)}
-                  variant="p"
-                />
+                {workplaces?.members?.map((m) => (
+                  <Link
+                    href={`/workplace/${workplaceId}/direct-message/${m.id}`}
+                    key={m?.id}
+                  >        
+                    <Typography
+                      text={m?.name ?? ""}
+                      className={cn(
+                        "px-2 py-1 rounded-sm cursor-pointer",
+                        hoverBg
+                      )}
+                      variant="p"
+                    />
+                  </Link>
+                ))}
               </>
             }
           />

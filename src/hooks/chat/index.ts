@@ -198,26 +198,29 @@ export const useChatScrollRef = ({
   bottomRef: RefObject<HTMLDivElement>;
   count: number;
 }) => {
-  const [hasInitilized, setHasInitilized] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
+
   useEffect(() => {
     const bottomDiv = bottomRef.current;
     const topDiv = chatRef.current;
+
     const autoScroll = () => {
-      if (!hasInitilized || bottomDiv) {
-        setHasInitilized(true);
+      if (!hasInitialized && bottomDiv) {
+        setHasInitialized(true);
         return true;
       }
       if (!topDiv) {
         return false;
       }
-      const distanceFromBottom = topDiv.scrollTop - topDiv.clientHeight;
+      const distanceFromBottom =
+        topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight;
       return distanceFromBottom <= 100;
     };
 
     if (autoScroll()) {
       setTimeout(() => {
-        bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     }
-  }, [bottomRef, chatRef, hasInitilized, count]);
+  }, [bottomRef, chatRef, count, hasInitialized]);
 };

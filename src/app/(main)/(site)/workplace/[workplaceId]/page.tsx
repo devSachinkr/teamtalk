@@ -4,7 +4,7 @@ import { getCurrentWorkplace } from "@/actions/get-workspace";
 import NochannelScreen from "@/components/global/no-channel-screen";
 import Sidebar from "@/components/sidebar";
 import SidebarInfo from "@/components/sidebar/sidebar-info";
-import { Workplaces } from "@/types/app";
+import { Channel, Workplaces } from "@/types/app";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -21,9 +21,14 @@ const page = async ({ params: { workplaceId } }: Props) => {
   }
   const { data, error } = await getUserWorkplace(userData.data?.workplaces!);
   //  @ts-ignore
-  const workplace:{data:Workplaces} = await getCurrentWorkplace(workplaceId);
-  if(workplace.data?.channels?.length){
-    return redirect(`/workplace/${workplaceId}/channel/${workplace.data?.channels[0]}`)
+  const workplace: { data: Workplaces } = await getCurrentWorkplace(
+    workplaceId
+  );
+  if (workplace.data?.channels?.length) {
+    const channel: Channel | any = workplace.data.channels[0];
+    if (typeof channel === "object" && channel.id) {
+      return redirect(`/workplace/${workplaceId}/channel/${channel.id}`);
+    }
   }
   return (
     <>

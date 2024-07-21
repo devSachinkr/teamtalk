@@ -16,7 +16,7 @@ export type USER = {
 };
 
 export type Workplaces = {
-  channels: string[] | null;
+  channels: string[] | null ;
   created_at: string;
   id: string;
   image: string | null;

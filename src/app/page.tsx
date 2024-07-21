@@ -2,11 +2,7 @@ import { getUserData } from "@/actions/get-user-data";
 import { redirect } from "next/navigation";
 import React from "react";
 
-type Props = {
-  children: React.ReactNode;
-};
-
-const page = async ({ children }: Props) => {
+const page = async () => {
   const user = await getUserData();
   if (!user) {
     return redirect("/sign-in");

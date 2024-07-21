@@ -88,7 +88,7 @@ export const useWorkplace = () => {
       if (isOpen) {
         setClose();
       }
-      router.refresh();
+      router.push("/");
       setLoading(false);
     }
   );

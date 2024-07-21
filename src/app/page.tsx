@@ -4,7 +4,7 @@ import React from "react";
 
 const page = async () => {
   const user = await getUserData();
-  if (!user) {
+  if (!user?.data) {
     return redirect("/sign-in");
   }
   const userWorkplacesId = user.data?.workplaces?.[0];

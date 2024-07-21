@@ -1,7 +1,6 @@
 import { getUserData } from "@/actions/get-user-data";
 import { superbaseCreateClient } from "@/lib/supabase/create-server";
-import { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 function pagination(page: number, size: number) {
   const limit = size ?  size : 10;
@@ -10,7 +9,7 @@ function pagination(page: number, size: number) {
   return { from, to };
 }
 
-export async function GET(req: NextApiRequest) {
+export async function GET(req: NextRequest) {
   const supabase = await superbaseCreateClient();
   const userData = await getUserData();
   const { searchParams } = new URL(req.url!);

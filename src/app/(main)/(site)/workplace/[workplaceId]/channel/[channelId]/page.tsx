@@ -31,9 +31,9 @@ const page = async ({ params: { channelId, workplaceId } }: Props) => {
     <div className="hidden md:block">
       <ChatGroup
         workplaceId={workplaceId}
-        workplace={workplace.data!}
+        workplace={workplace?.data!}
         channelId={channelId}
-        user={userData.data!}
+        user={userData?.data!}
         userWorkPlaceData={data!}
         chatId={channelId}
         slug={workplaceId}

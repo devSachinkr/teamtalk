@@ -14,7 +14,7 @@ import Link from "next/link";
 import { Workplaces } from "@/types/app";
 
 type Props = {
-  workplaces: Workplaces;
+  workplaces?: Workplaces;
 };
 
 const SidebarInfo = ({ workplaces }: Props) => {

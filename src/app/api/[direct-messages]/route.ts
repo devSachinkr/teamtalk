@@ -20,20 +20,20 @@ export async function GET(req: Request) {
     const page = Number(searchParams.get("page"));
     const size = Number(searchParams.get("size"));
     const { from, to } = pagination(page, size);
-    const { data, error } = await supabase
+    const { data, error } = await supabase   
       .from("direct_messages")
-      .select(`*, user_one:user_one(*), user_two:user_two(*), user:user(*)`)
+      .select(`*, user:userId(*),user_one:user_one(*), user_two:user_two(*)`)
       .or(
         `and(user_one.eq.${userId}, user_two.eq.${recipientId}), and(user_one.eq.${recipientId}, user_two.eq.${userId})`
       )
       .range(from, to)
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
     if (error) {
       console.log(error);
       return new NextResponse("Internal Server Error", { status: 500 });
     }
-    
     return NextResponse.json({ data }, { status: 201 });
+
   } catch (error) {
       console.log(error);
     return new NextResponse("Internal Server Error", { status: 500 });

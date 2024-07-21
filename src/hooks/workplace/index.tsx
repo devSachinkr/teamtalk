@@ -57,7 +57,6 @@ export const useWorkplace = () => {
 
   const onSubmitStepOne = handleSubmit(
     (data: z.infer<typeof workspaceFormSchemaStep1>) => {
-      console.log(data.name);
       useWorkplaceStore.getState().updateValues({ name: data.name });
       useWorkplaceStore.getState().setCurrentStep(2);
       router.refresh();

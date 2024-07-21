@@ -35,12 +35,13 @@ const ChatMessages = ({
   socketQuery,
   socketUrl,
 }: Props) => {
+
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
   const { channels } = useColorTheme();
   const channel = channels?.find((c) => c?.id === channelId);
   const queryKey =
-    type === "Channels" ? `channel:${chatId}` : `direct_messgae${chatId}`;
+    type === "Channels" ? `channel:${chatId}` : `direct_messages${chatId}`;
   const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useFetchMessages({
       apiUrl,

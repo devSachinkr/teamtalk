@@ -98,7 +98,7 @@ const ChatGroup = ({
         {!isVideoCall && (
           <TextEditor
             apiUrl={socketUrl}
-            type="Channels"
+            type={type}
             channelId={channelId}
             workplaceId={workplaceId}
             workplace={workplace}

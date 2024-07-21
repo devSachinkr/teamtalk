@@ -29,11 +29,10 @@ export const workplaceInvite = async (inviteCode: string) => {
     console.log("Error in workplaceInvite ", error);
     return;
   }
-
+  // @ts-ignore
   const isMember = data?.members?.includes(user.data?.id!);
 
   if (isMember) {
-    console.log("Already a member of this workspace");
     return;
   }
 

@@ -11,7 +11,6 @@ type Props = {
 };
 
 const page = async ({ params: { inviteCode } }: Props) => {
-    console.log(inviteCode)
   const user = await getUserData();
   if (!user?.data) {
     redirect("/sign-in");
@@ -29,7 +28,6 @@ const page = async ({ params: { inviteCode } }: Props) => {
     console.log(error);
     return;
   }
-  console.log(data);
   if (data) {
     redirect(`/workplace/${data.id}`);
   } else {

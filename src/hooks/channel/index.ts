@@ -149,7 +149,7 @@ export const useChannelFileUpload = ({
 
       if (recipientId) {
         const { error: DirectMessageError, data: directMessageData } =
-          await supabase.from("direct_messgaes").insert({
+          await supabase.from("direct_messages").insert({
             file_url: data.path,
             userId: user.id,
             user_one: user.id,
@@ -237,7 +237,6 @@ export const useFetchMessages = ({
       paramValue
     )}&page=${pageParam}&size=${pageSize}`;
     const { data } = await axios.get<MessageWithUser>(url);
-    console.log(data)
     return data as any;
   };
 

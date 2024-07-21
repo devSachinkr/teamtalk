@@ -21,7 +21,7 @@ import { Button } from "../ui/button";
 type Props = {
   id: string;
   content: string;
-  user: USER;
+  user: USER ;
   timestamp: string;
   fileUrl?: string;
   deleted: boolean;
@@ -64,10 +64,12 @@ const ChatMessagesItem = ({
     };
   }, []);
   const { fileType, publicUrl } = useChat(fileUrl!);
+
+  if(!user) return
   const isSuperAdmin = currentUser.id === channelData?.user_id;
   const isRegulator =
     channelData?.regulators?.includes(currentUser.id) ?? false;
-  const isOwner = currentUser.id === user.id;
+  const isOwner = currentUser.id === user?.id;
   const canDeleteMessage = !deleted && (isSuperAdmin || isRegulator || isOwner);
   const canEditMessage = !deleted && isOwner && !fileUrl;
   const isPdf = fileType === "pdf" && fileUrl;
@@ -111,6 +113,7 @@ const ChatMessagesItem = ({
       </>
     );
   };
+
   return (
     <div className="relative group flex items-center hover:bg-black/5 px-1 py-2 rounded transition w-full ">
       <div className="flex flex-col">

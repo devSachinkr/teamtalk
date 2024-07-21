@@ -22,9 +22,9 @@ const page = async ({ params: { workplaceId } }: Props) => {
   const { data, error } = await getUserWorkplace(userData.data?.workplaces!);
   //  @ts-ignore
   const workplace:{data:Workplaces} = await getCurrentWorkplace(workplaceId);
-  // if(workplace.data?.channels?.length){
-  //   return redirect(`/workplace/${workplaceId}/channel/${workplace.data?.channels[0]}`)
-  // }
+  if(workplace.data?.channels?.length){
+    return redirect(`/workplace/${workplaceId}/channel/${workplace.data?.channels[0]}`)
+  }
   return (
     <>
       <div className="hidden md:block">
@@ -41,7 +41,7 @@ const page = async ({ params: { workplaceId } }: Props) => {
           workplaceName={workplace.data?.name!}
         />
       </div>
-      <div className="md:hidden block min-h-screen">Mobilesds</div>
+      <div className="md:hidden block min-h-screen">Mobiles</div>
     </>
   );
 };
